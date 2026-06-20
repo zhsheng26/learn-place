@@ -6,11 +6,11 @@
 ![VitePress](https://img.shields.io/badge/VitePress-1.5+-green.svg)
 ![Vue](https://img.shields.io/badge/Vue-3.4+-brightgreen.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)
-![Stars](https://img.shields.io/github/stars/your-org/learn-place?style=social)
+![Stars](https://img.shields.io/github/stars/zhsheng26/learn-place?style=social)
 
 **系统化学习路线 · 实战项目训练 · 能力评估体系**
 
-[🌐 在线预览](https://your-org.github.io/learn-place/) | [📖 快速开始](#-快速开始) | [💬 讨论区](https://github.com/your-org/learn-place/discussions)
+[🌐 在线预览](https://zhsheng26.github.io/learn-place/) | [📖 快速开始](#-快速开始) | [💬 讨论区](https://github.com/zhsheng26/learn-place/discussions)
 
 </div>
 
@@ -109,7 +109,7 @@ graph LR
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/your-org/learn-place.git
+git clone https://github.com/zhsheng26/learn-place.git
 cd learn-place
 
 # 2. 安装依赖
@@ -239,7 +239,7 @@ learn-place/
 
 ## 🌐 在线预览
 
-访问 **[https://your-org.github.io/learn-place/](https://your-org.github.io/learn-place/)** 即可浏览完整内容。
+访问 **[https://zhsheng26.github.io/learn-place/](https://zhsheng26.github.io/learn-place/)** 即可浏览完整内容。
 
 > 💡 **提示**: 首次加载可能需要几秒时间,因为需要下载Mermaid和ECharts库。后续访问会使用浏览器缓存,速度更快。
 
@@ -346,8 +346,8 @@ SOFTWARE.
 
 ## 📬 联系方式
 
-- 🐛 **问题反馈**: [GitHub Issues](https://github.com/your-org/learn-place/issues)
-- 💬 **讨论交流**: [GitHub Discussions](https://github.com/your-org/learn-place/discussions)
+- 🐛 **问题反馈**: [GitHub Issues](https://github.com/zhsheng26/learn-place/issues)
+- 💬 **讨论交流**: [GitHub Discussions](https://github.com/zhsheng26/learn-place/discussions)
 - 📧 **邮件联系**: contact@learnplace.dev (示例邮箱)
 - 🌟 **Star支持**: 如果本项目对你有帮助,请给我们一个Star ⭐
 

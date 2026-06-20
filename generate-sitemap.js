@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // 站点URL配置
-const SITE_URL = 'https://your-org.github.io/learn-place/'
+const SITE_URL = 'https://zhsheng26.github.io/learn-place/'
 
 // 需要收录的页面路径
 const pages = [

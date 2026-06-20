@@ -21,8 +21,8 @@ export default defineConfig({
     ['meta', { property: 'og:title', content: 'LearnPlace - Java开发者AI转型学习平台' }],
     ['meta', { property: 'og:description', content: '系统化学习路线、实战项目训练、能力评估体系,助力Java后端开发者快速掌握AI/Agent开发技能' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:url', content: 'https://your-org.github.io/learn-place/' }],
-    ['meta', { property: 'og:image', content: 'https://your-org.github.io/learn-place/og-image.png' }],
+    ['meta', { property: 'og:url', content: 'https://zhsheng26.github.io/learn-place/' }],
+    ['meta', { property: 'og:image', content: 'https://zhsheng26.github.io/learn-place/og-image.png' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
     
     // Twitter Card
@@ -221,7 +221,7 @@ export default defineConfig({
 
     // 主题配置
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-org/learn-place' },
+      { icon: 'github', link: 'https://github.com/zhsheng26/learn-place' },
     ],
 
     footer: {
@@ -236,7 +236,7 @@ export default defineConfig({
 
     // 编辑链接
     editLink: {
-      pattern: 'https://github.com/your-org/learn-place/edit/main/docs/:path',
+      pattern: 'https://github.com/zhsheng26/learn-place/edit/main/docs/:path',
       text: '在GitHub上编辑此页面',
     },
 
