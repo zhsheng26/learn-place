@@ -1,0 +1,334 @@
+{
+  "categories": [
+    {
+      "id": "llm-theory",
+      "name": "LLM理论基础",
+      "description": "大语言模型的核心概念和原理",
+      "questions": [
+        {
+          "id": "q-001",
+          "type": "single_choice",
+          "difficulty": "easy",
+          "question": "Transformer架构中,Self-Attention的主要作用是?",
+          "options": [
+            {"key": "A", "text": "提取局部特征"},
+            {"key": "B", "text": "捕捉序列中长距离依赖关系"},
+            {"key": "C", "text": "加速模型训练"},
+            {"key": "D", "text": "减少模型参数量"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "Self-Attention通过计算序列中所有位置的注意力权重,能够捕捉长距离依赖关系,这是Transformer相比RNN的核心优势。每个位置都可以直接关注到序列中的任意其他位置,不受距离限制。",
+          "knowledgePoints": ["Transformer", "Attention机制"],
+          "references": ["https://arxiv.org/abs/1706.03762"]
+        },
+        {
+          "id": "q-002",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "在Transformer中,Positional Encoding的作用是?",
+          "options": [
+            {"key": "A", "text": "增加模型的表达能力"},
+            {"key": "B", "text": "为输入序列提供位置信息"},
+            {"key": "C", "text": "减少计算复杂度"},
+            {"key": "D", "text": "提高训练速度"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "由于Transformer的Self-Attention机制是排列不变的(即打乱输入顺序不影响输出),需要通过Positional Encoding为每个token添加位置信息,使模型能够理解序列的顺序。",
+          "knowledgePoints": ["Transformer", "位置编码"],
+          "references": []
+        },
+        {
+          "id": "q-003",
+          "type": "multiple_choice",
+          "difficulty": "hard",
+          "question": "以下哪些是LLM常见的解码策略?(多选)",
+          "options": [
+            {"key": "A", "text": "Greedy Decoding"},
+            {"key": "B", "text": "Beam Search"},
+            {"key": "C", "text": "Top-k Sampling"},
+            {"key": "D", "text": "Top-p (Nucleus) Sampling"}
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "这四种都是常见的解码策略:\n- Greedy Decoding: 每步选择概率最高的token\n- Beam Search: 维护多个候选序列,选择整体概率最高的\n- Top-k Sampling: 从概率最高的k个token中采样\n- Top-p Sampling: 从累积概率达到p的最小token集合中采样",
+          "knowledgePoints": ["解码策略", "文本生成"],
+          "references": []
+        },
+        {
+          "id": "q-004",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "Tokenization过程中,BPE(Byte Pair Encoding)算法的核心思想是?",
+          "options": [
+            {"key": "A", "text": "将文本按空格分割"},
+            {"key": "B", "text": "迭代合并出现频率最高的字符对"},
+            {"key": "C", "text": "使用固定长度的子词"},
+            {"key": "D", "text": "基于语法规则进行分词"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "BPE算法从字符级别开始,迭代地统计并合并出现频率最高的相邻字符对,逐步构建词汇表。这种方法可以平衡词汇表大小和OOV(未登录词)问题,被GPT等模型广泛采用。",
+          "knowledgePoints": ["Tokenization", "BPE算法"],
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "prompt-eng",
+      "name": "Prompt工程",
+      "description": "与大语言模型高效交互的技巧",
+      "questions": [
+        {
+          "id": "q-101",
+          "type": "single_choice",
+          "difficulty": "easy",
+          "question": "Few-shot Prompting的核心思想是?",
+          "options": [
+            {"key": "A", "text": "只提供任务描述"},
+            {"key": "B", "text": "在prompt中提供少量示例"},
+            {"key": "C", "text": "使用大量训练数据微调模型"},
+            {"key": "D", "text": "多次重复同一个prompt"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "Few-shot Prompting通过在prompt中提供少量输入-输出示例,让模型理解任务模式,从而更好地完成类似任务。这是一种无需微调即可提升模型表现的有效方法。",
+          "knowledgePoints": ["Few-shot Learning", "Prompt设计"],
+          "references": []
+        },
+        {
+          "id": "q-102",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "Chain-of-Thought(CoT) prompting主要用于提升模型的什么能力?",
+          "options": [
+            {"key": "A", "text": "文本生成速度"},
+            {"key": "B", "text": "复杂推理能力"},
+            {"key": "C", "text": "多语言支持"},
+            {"key": "D", "text": "代码生成质量"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "CoT prompting通过引导模型逐步展示推理过程(如'让我们一步步思考'),显著提升模型在数学、逻辑推理等复杂任务上的表现。这种方法模拟了人类的思维过程。",
+          "knowledgePoints": ["Chain-of-Thought", "推理能力"],
+          "references": ["https://arxiv.org/abs/2201.11903"]
+        },
+        {
+          "id": "q-103",
+          "type": "multiple_choice",
+          "difficulty": "medium",
+          "question": "以下哪些是优秀的Prompt设计原则?(多选)",
+          "options": [
+            {"key": "A", "text": "指令清晰明确"},
+            {"key": "B", "text": "提供足够的上下文"},
+            {"key": "C", "text": "使用分隔符区分不同部分"},
+            {"key": "D", "text": "指定输出格式"}
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "这些都是Prompt设计的最佳实践:\n- 清晰的指令避免歧义\n- 充足的上下文帮助模型理解任务\n- 分隔符(如```, ---)提高可读性\n- 指定输出格式便于后续处理",
+          "knowledgePoints": ["Prompt设计原则", "最佳实践"],
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "rag",
+      "name": "RAG架构",
+      "description": "检索增强生成的核心原理和优化策略",
+      "questions": [
+        {
+          "id": "q-201",
+          "type": "single_choice",
+          "difficulty": "easy",
+          "question": "RAG(Retrieval-Augmented Generation)的主要优势是?",
+          "options": [
+            {"key": "A", "text": "减少模型参数量"},
+            {"key": "B", "text": "结合外部知识库,提高准确性和时效性"},
+            {"key": "C", "text": "加快推理速度"},
+            {"key": "D", "text": "降低训练成本"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "RAG通过检索外部知识库并将相关信息注入到prompt中,使模型能够访问最新、最准确的信息,解决了LLM知识截止和幻觉问题,同时保持了模型的通用性。",
+          "knowledgePoints": ["RAG", "知识增强"],
+          "references": ["https://arxiv.org/abs/2005.11401"]
+        },
+        {
+          "id": "q-202",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "在RAG系统中,向量数据库的主要作用是?",
+          "options": [
+            {"key": "A", "text": "存储原始文本"},
+            {"key": "B", "text": "存储文本的向量表示并支持相似度搜索"},
+            {"key": "C", "text": "加速模型推理"},
+            {"key": "D", "text": "管理用户权限"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "向量数据库存储文本片段的embedding向量,并提供高效的相似度搜索功能(如余弦相似度、欧氏距离),能够快速找到与查询最相关的文档片段。",
+          "knowledgePoints": ["向量数据库", "相似度搜索"],
+          "references": []
+        },
+        {
+          "id": "q-203",
+          "type": "multiple_choice",
+          "difficulty": "hard",
+          "question": "以下哪些是RAG系统中常见的文本分块(chunking)策略?(多选)",
+          "options": [
+            {"key": "A", "text": "固定长度分块"},
+            {"key": "B", "text": "基于语义边界的分块"},
+            {"key": "C", "text": "重叠分块(Overlapping chunks)"},
+            {"key": "D", "text": "基于段落结构的分块"}
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "这些都是常用的分块策略:\n- 固定长度: 简单但可能切断语义\n- 语义边界: 保持语义完整性\n- 重叠分块: 避免边界信息丢失\n- 段落结构: 利用文档自然结构\n实际应用中常组合使用多种策略。",
+          "knowledgePoints": ["文本分块", "RAG优化"],
+          "references": []
+        },
+        {
+          "id": "q-204",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "Hybrid Search(混合搜索)通常结合哪两种检索方式?",
+          "options": [
+            {"key": "A", "text": "关键词搜索 + 向量相似度搜索"},
+            {"key": "B", "text": "全文搜索 + 正则表达式"},
+            {"key": "C", "text": "精确匹配 + 模糊匹配"},
+            {"key": "D", "text": "本地搜索 + 云端搜索"}
+          ],
+          "correctAnswer": "A",
+          "explanation": "Hybrid Search结合了关键词搜索(BM25等)和向量相似度搜索的优势。关键词搜索擅长精确匹配,向量搜索擅长语义匹配,两者结合可以提升检索的召回率和准确率。",
+          "knowledgePoints": ["混合搜索", "检索优化"],
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "agent",
+      "name": "Agent开发",
+      "description": "智能Agent的设计模式和实现技巧",
+      "questions": [
+        {
+          "id": "q-301",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "ReAct(Reasoning + Acting)框架的核心思想是?",
+          "options": [
+            {"key": "A", "text": "只进行推理不执行动作"},
+            {"key": "B", "text": "交替进行推理和行动,形成思考-行动循环"},
+            {"key": "C", "text": "并行执行多个任务"},
+            {"key": "D", "text": "预先规划所有步骤再执行"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "ReAct框架让Agent在解决问题时交替进行推理(Thought)和行动(Action),每次行动后观察结果(Observation),再继续推理。这种循环使Agent能够动态调整策略,更适合复杂任务。",
+          "knowledgePoints": ["ReAct", "Agent架构"],
+          "references": ["https://arxiv.org/abs/2210.03629"]
+        },
+        {
+          "id": "q-302",
+          "type": "multiple_choice",
+          "difficulty": "hard",
+          "question": "在多Agent系统中,常见的协作模式包括?(多选)",
+          "options": [
+            {"key": "A", "text": "Sequential(顺序执行)"},
+            {"key": "B", "text": "Parallel(并行执行)"},
+            {"key": "C", "text": "Hierarchical(层级式)"},
+            {"key": "D", "text": "Debate(辩论式)"}
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "多Agent系统有多种协作模式:\n- Sequential: Agent按顺序传递任务\n- Parallel: 多个Agent同时处理不同子任务\n- Hierarchical: Manager-Agent分解任务给Worker-Agents\n- Debate: 多个Agent相互讨论达成共识",
+          "knowledgePoints": ["多Agent", "协作模式"],
+          "references": []
+        },
+        {
+          "id": "q-303",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "Function Calling在Agent系统中的作用是?",
+          "options": [
+            {"key": "A", "text": "调用外部工具或API扩展Agent能力"},
+            {"key": "B", "text": "加速模型推理"},
+            {"key": "C", "text": "减少token消耗"},
+            {"key": "D", "text": "提高模型准确率"}
+          ],
+          "correctAnswer": "A",
+          "explanation": "Function Calling允许LLM识别何时需要调用外部函数(如搜索API、计算器、数据库查询等),并生成符合规范的函数调用参数。这使得Agent能够突破纯文本生成的限制,与外部系统交互。",
+          "knowledgePoints": ["Function Calling", "工具使用"],
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "frameworks",
+      "name": "框架使用",
+      "description": "Spring AI和LangChain4J等框架的使用技巧",
+      "questions": [
+        {
+          "id": "q-401",
+          "type": "single_choice",
+          "difficulty": "easy",
+          "question": "Spring AI中的ChatClient主要作用是?",
+          "options": [
+            {"key": "A", "text": "管理数据库连接"},
+            {"key": "B", "text": "简化与大语言模型的交互"},
+            {"key": "C", "text": "处理HTTP请求"},
+            {"key": "D", "text": "监控系统性能"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "ChatClient是Spring AI提供的核心API,封装了与各种LLM提供商(OpenAI、Azure、Ollama等)的交互细节,提供统一的编程接口,支持流式响应、Function Calling等高级特性。",
+          "knowledgePoints": ["Spring AI", "ChatClient"],
+          "references": []
+        },
+        {
+          "id": "q-402",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "在Spring AI中,VectorStore接口的作用是?",
+          "options": [
+            {"key": "A", "text": "存储用户会话数据"},
+            {"key": "B", "text": "抽象向量数据库操作,支持多种实现"},
+            {"key": "C", "text": "缓存模型响应"},
+            {"key": "D", "text": "管理API密钥"}
+          ],
+          "correctAnswer": "B",
+          "explanation": "VectorStore是Spring AI定义的接口,提供了统一的向量存储和检索API,支持多种后端实现(如Milvus、Chroma、PgVector等),使应用可以轻松切换不同的向量数据库。",
+          "knowledgePoints": ["Spring AI", "VectorStore"],
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "system-design",
+      "name": "系统设计",
+      "description": "AI应用的系统设计和架构考量",
+      "questions": [
+        {
+          "id": "q-501",
+          "type": "multiple_choice",
+          "difficulty": "hard",
+          "question": "在设计高并发AI应用时,以下哪些策略可以有效提升性能?(多选)",
+          "options": [
+            {"key": "A", "text": "使用流式响应减少等待时间"},
+            {"key": "B", "text": "实现响应缓存避免重复计算"},
+            {"key": "C", "text": "异步处理非关键任务"},
+            {"key": "D", "text": "批量处理相似请求"}
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "这些策略都能有效提升性能:\n- 流式响应: 提升用户体验,减少感知延迟\n- 响应缓存: 对相同query返回缓存结果\n- 异步处理: 日志记录、数据分析等非关键任务异步执行\n- 批量处理: 合并相似请求减少API调用次数",
+          "knowledgePoints": ["性能优化", "高并发"],
+          "references": []
+        },
+        {
+          "id": "q-502",
+          "type": "single_choice",
+          "difficulty": "medium",
+          "question": "AI应用中的降级策略不包括?",
+          "options": [
+            {"key": "A", "text": "LLM超时后返回预设答案"},
+            {"key": "B", "text": "切换到备用模型提供商"},
+            {"key": "C", "text": "降低模型温度参数"},
+            {"key": "D", "text": "完全停止服务"}
+          ],
+          "correctAnswer": "D",
+          "explanation": "降级策略的目标是在异常情况下仍能提供基本服务,而不是完全停止。常见策略包括:返回缓存/预设答案、切换备用模型、简化处理流程、降低服务质量但保持可用性等。",
+          "knowledgePoints": ["容错设计", "降级策略"],
+          "references": []
+        }
+      ]
+    }
+  ]
+}

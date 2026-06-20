@@ -1,0 +1,349 @@
+{
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "智能问答机器人",
+      "level": "L1",
+      "duration": "1周",
+      "techStack": ["Spring Boot 3", "Spring AI", "OpenAI API"],
+      "description": "基于Spring AI实现一个简单的QA机器人,支持多轮对话和上下文记忆。这是入门AI应用开发的第一个实战项目。",
+      "learningObjectives": [
+        "掌握Spring AI的基本使用",
+        "理解ChatClient的API设计",
+        "学习会话管理技巧",
+        "实践Prompt工程基础"
+      ],
+      "requirements": [
+        "支持多轮对话,保持上下文连贯",
+        "能够设置系统提示(System Prompt)定义角色",
+        "支持流式响应提升用户体验",
+        "基本的错误处理和降级策略"
+      ],
+      "architecture": "graph TD\n    A[用户请求] --> B[Controller层]\n    B --> C[Service层]\n    C --> D[Spring AI ChatClient]\n    D --> E[OpenAI API]\n    E --> D\n    D --> C\n    C --> F[会话存储]\n    F --> C\n    C --> B\n    B --> G[流式响应]",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "title": "项目初始化",
+          "description": "使用Spring Initializr创建Spring Boot 3项目,添加spring-ai-openai依赖",
+          "codeSnippet": "dependencies {\n    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'\n}"
+        },
+        {
+          "step": 2,
+          "title": "配置API密钥",
+          "description": "在application.yml中配置OpenAI API密钥",
+          "codeSnippet": "spring:\n  ai:\n    openai:\n      api-key: ${OPENAI_API_KEY}\n      chat:\n        options:\n          model: gpt-3.5-turbo\n          temperature: 0.7"
+        },
+        {
+          "step": 3,
+          "title": "实现聊天服务",
+          "description": "创建ChatService,注入ChatClient,实现对话逻辑",
+          "codeSnippet": "@Service\npublic class ChatService {\n    private final ChatClient chatClient;\n    private final Map<String, List<Message>> sessions = new ConcurrentHashMap<>();\n    \n    public Flux<String> chat(String sessionId, String userMessage) {\n        List<Message> history = sessions.computeIfAbsent(sessionId, k -> new ArrayList<>());\n        history.add(new UserMessage(userMessage));\n        \n        return chatClient.prompt()\n            .messages(history)\n            .stream()\n            .content();\n    }\n}"
+        },
+        {
+          "step": 4,
+          "title": "创建REST接口",
+          "description": "实现WebSocket或SSE端点支持流式响应",
+          "codeSnippet": "@RestController\n@RequestMapping(\"/api/chat\")\npublic class ChatController {\n    @GetMapping(value = \"/{sessionId}\", produces = MediaType.TEXT_EVENT_STREAM_VALUE)\n    public Flux<String> chat(@PathVariable String sessionId, @RequestParam String message) {\n        return chatService.chat(sessionId, message);\n    }\n}"
+        }
+      ],
+      "testingCriteria": [
+        "多轮对话能正确保持上下文",
+        "流式响应正常工作",
+        "会话隔离(不同sessionId互不影响)",
+        "API超时时有合理的错误提示"
+      ],
+      "commonIssues": [
+        {
+          "issue": "API密钥泄露",
+          "solution": "使用环境变量或Secret Manager,不要硬编码在代码中"
+        },
+        {
+          "issue": "会话内存溢出",
+          "solution": "实现会话过期清理机制,限制历史消息数量"
+        },
+        {
+          "issue": "响应速度慢",
+          "solution": "使用流式响应,考虑缓存常用问题的答案"
+        }
+      ],
+      "extensions": [
+        "添加知识库检索功能(RAG)",
+        "实现角色切换(客服、助手、专家等)",
+        "添加对话历史记录和导出功能"
+      ],
+      "resources": [
+        {"type": "doc", "title": "Spring AI官方文档", "url": "https://spring.io/projects/spring-ai"},
+        {"type": "example", "title": "完整代码示例", "url": "https://github.com/spring-projects/spring-ai-examples"}
+      ]
+    },
+    {
+      "id": "proj-2",
+      "title": "RAG知识库问答系统",
+      "level": "L2",
+      "duration": "2周",
+      "techStack": ["Spring Boot 3", "Spring AI", "Milvus/PgVector", "OpenAI API"],
+      "description": "构建一个基于RAG的知识库问答系统,能够上传文档、建立索引,并基于文档内容回答用户问题。",
+      "learningObjectives": [
+        "掌握RAG架构的完整实现流程",
+        "学习向量数据库的使用",
+        "理解文本分块和Embedding",
+        "实践检索优化技巧"
+      ],
+      "requirements": [
+        "支持PDF/TXT/Markdown文档上传",
+        "自动进行文本分块和向量化",
+        "基于相似度检索相关文档片段",
+        "结合检索结果生成准确答案",
+        "显示引用来源"
+      ],
+      "architecture": "graph LR\n    A[文档上传] --> B[文本提取]\n    B --> C[文本分块]\n    C --> D[Embedding生成]\n    D --> E[向量数据库]\n    F[用户查询] --> G[Query Embedding]\n    G --> H[相似度检索]\n    H --> E\n    H --> I[相关文档]\n    I --> J[LLM生成答案]\n    J --> K[返回答案+引用]",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "title": "集成向量数据库",
+          "description": "选择并集成向量数据库(推荐PgVector或Milvus)",
+          "codeSnippet": "dependencies {\n    implementation 'org.springframework.ai:spring-ai-pgvector-spring-boot-starter'\n}"
+        },
+        {
+          "step": 2,
+          "title": "实现文档处理服务",
+          "description": "创建DocumentIngestionService,处理文档上传、分块、向量化",
+          "codeSnippet": "@Service\npublic class DocumentIngestionService {\n    private final VectorStore vectorStore;\n    private final DocumentReader documentReader;\n    \n    public void ingestDocument(MultipartFile file) {\n        List<Document> documents = documentReader.read(file);\n        List<Document> chunks = chunkDocuments(documents);\n        vectorStore.add(chunks);\n    }\n    \n    private List<Document> chunkDocuments(List<Document> docs) {\n        TokenTextSplitter splitter = new TokenTextSplitter(500, 50);\n        return docs.stream()\n            .flatMap(doc -> splitter.split(doc).stream())\n            .collect(Collectors.toList());\n    }\n}"
+        },
+        {
+          "step": 3,
+          "title": "实现RAG查询服务",
+          "description": "创建RagQueryService,结合检索和生成",
+          "codeSnippet": "@Service\npublic class RagQueryService {\n    private final VectorStore vectorStore;\n    private final ChatClient chatClient;\n    \n    public String query(String question) {\n        // 检索相关文档\n        List<Document> similarDocs = vectorStore.similaritySearch(question);\n        \n        // 构建增强prompt\n        String context = similarDocs.stream()\n            .map(Document::getContent)\n            .collect(Collectors.joining(\"\\n\\n\"));\n        \n        String prompt = String.format(\n            \"基于以下信息回答问题:\\n%s\\n\\n问题: %s\\n答案:\",\n            context, question\n        );\n        \n        return chatClient.prompt(prompt).call().content();\n    }\n}"
+        }
+      ],
+      "testingCriteria": [
+        "文档上传和索引正常工作",
+        "检索结果与查询相关度高",
+        "生成的答案准确且有引用",
+        "支持中文文档处理"
+      ],
+      "commonIssues": [
+        {
+          "issue": "检索结果不相关",
+          "solution": "优化分块策略,调整embedding模型,使用混合搜索"
+        },
+        {
+          "issue": "答案包含错误信息",
+          "solution": "在prompt中强调'仅基于提供的信息回答',添加置信度阈值"
+        },
+        {
+          "issue": "向量数据库性能差",
+          "solution": "添加索引,优化批量插入,考虑使用HNSW算法"
+        }
+      ],
+      "extensions": [
+        "实现混合搜索(关键词+向量)",
+        "添加重排序(Rerank)步骤提升精度",
+        "支持多租户数据隔离",
+        "实现增量更新而非全量重建"
+      ],
+      "resources": [
+        {"type": "doc", "title": "RAG最佳实践", "url": "https://www.pinecone.io/learn/retrieval-augmented-generation/"},
+        {"type": "video", "title": "RAG实战教程", "url": "https://www.bilibili.com/video/BV1xxx"}
+      ]
+    },
+    {
+      "id": "proj-3",
+      "title": "代码生成Agent",
+      "level": "L2",
+      "duration": "2周",
+      "techStack": ["Spring Boot 3", "Spring AI", "OpenAI API", "GitHub API"],
+      "description": "开发一个能够根据需求描述生成代码的Agent,支持Java/Spring Boot项目,并能创建完整的文件结构。",
+      "learningObjectives": [
+        "深入理解Function Calling机制",
+        "学习Agent的设计模式",
+        "掌握代码生成的Prompt技巧",
+        "实践文件系统操作"
+      ],
+      "requirements": [
+        "根据自然语言描述生成Java代码",
+        "支持创建多文件项目结构",
+        "能够解释生成的代码",
+        "支持代码迭代修改",
+        "生成的代码可编译运行"
+      ],
+      "architecture": "graph TD\n    A[用户需求] --> B[Agent Orchestrator]\n    B --> C[需求分析]\n    C --> D[架构设计]\n    D --> E[代码生成]\n    E --> F[代码验证]\n    F -->|有问题| E\n    F -->|通过| G[文件输出]\n    G --> H[项目打包]",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "title": "定义工具函数",
+          "description": "创建代码生成所需的工具函数,如文件写入、编译检查等",
+          "codeSnippet": "@Bean\npublic FunctionCallback createFileFunction() {\n    return FunctionCallback.builder()\n        .function(\"createFile\", (args) -> {\n            String path = args.getString(\"path\");\n            String content = args.getString(\"content\");\n            Files.writeString(Path.of(path), content);\n            return \"File created: \" + path;\n        })\n        .description(\"Create a file with given path and content\")\n        .inputSchema(\"{\" +\n            \"  \\\"type\\\": \\\"object\\\",\" +\n            \"  \\\"properties\\\": {\" +\n            \"    \\\"path\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"File path\\\"},\" +\n            \"    \\\"content\\\": {\\\"type\\\": \\\"string\\\", \\\"description\\\": \\\"File content\\\"}\" +\n            \"  }\" +\n            \"}\")\n        .build();\n}"
+        },
+        {
+          "step": 2,
+          "title": "实现Agent核心逻辑",
+          "description": "使用ReAct模式实现代码生成Agent",
+          "codeSnippet": "@Service\npublic class CodeGenerationAgent {\n    private final ChatClient chatClient;\n    \n    public Project generateProject(String requirement) {\n        String systemPrompt = \"\"\"\n            You are an expert Java developer.\n            Generate a complete Spring Boot project based on the requirement.\n            Think step by step:\n            1. Analyze requirements\n            2. Design architecture\n            3. Generate code files\n            4. Verify completeness\n            \"\"\";\n        \n        return chatClient.prompt()\n            .system(systemPrompt)\n            .user(requirement)\n            .functions(\"createFile\", \"listFiles\", \"compileCheck\")\n            .call()\n            .entity(Project.class);\n    }\n}"
+        }
+      ],
+      "testingCriteria": [
+        "生成的代码符合Spring Boot规范",
+        "项目结构合理,职责清晰",
+        "代码能够成功编译",
+        "支持常见业务场景(CRUD、REST API等)"
+      ],
+      "commonIssues": [
+        {
+          "issue": "生成的代码有编译错误",
+          "solution": "添加编译验证步骤,让Agent自我修复"
+        },
+        {
+          "issue": "代码风格不一致",
+          "solution": "在system prompt中明确编码规范,或使用代码格式化工具"
+        }
+      ],
+      "extensions": [
+        "支持多种编程语言",
+        "集成单元测试生成",
+        "添加代码审查功能",
+        "实现Git提交和PR创建"
+      ],
+      "resources": []
+    },
+    {
+      "id": "proj-4",
+      "title": "多Agent协作系统",
+      "level": "L3",
+      "duration": "3周",
+      "techStack": ["Spring Boot 3", "Spring AI", "Redis", "RabbitMQ/Kafka"],
+      "description": "构建一个多Agent协作系统,模拟软件研发团队(产品经理、架构师、开发者、测试工程师)协作完成项目开发。",
+      "learningObjectives": [
+        "掌握多Agent系统设计",
+        "学习Agent间通信机制",
+        "理解任务分解和分配",
+        "实践复杂工作流编排"
+      ],
+      "requirements": [
+        "至少4个Agent角色(PM、Architect、Developer、Tester)",
+        "Agent间能够传递消息和中间产物",
+        "支持任务状态追踪",
+        "能够生成完整的项目文档和代码",
+        "可视化展示协作过程"
+      ],
+      "architecture": "graph TB\n    User[用户需求] --> PM[Product Manager Agent]\n    PM -->|PRD| Arch[Architect Agent]\n    Arch -->|Design| Dev1[Developer Agent 1]\n    Arch -->|Design| Dev2[Developer Agent 2]\n    Dev1 -->|Code| Test[Tester Agent]\n    Dev2 -->|Code| Test\n    Test -->|Bug Report| Dev1\n    Test -->|Bug Report| Dev2\n    Test -->|Pass| Deploy[Deployment]",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "title": "定义Agent基类",
+          "description": "创建统一的Agent接口和基类",
+          "codeSnippet": "public abstract class BaseAgent {\n    protected final ChatClient chatClient;\n    protected final MessageQueue messageQueue;\n    \n    public abstract String getRole();\n    public abstract TaskResult processTask(Task task);\n    \n    protected String callLLM(String prompt) {\n        return chatClient.prompt(prompt).call().content();\n    }\n}"
+        },
+        {
+          "step": 2,
+          "title": "实现消息队列",
+          "description": "使用Redis或RabbitMQ实现Agent间通信",
+          "codeSnippet": "@Service\npublic class AgentMessageBus {\n    private final RedisTemplate<String, AgentMessage> redisTemplate;\n    \n    public void sendMessage(String targetAgent, AgentMessage message) {\n        redisTemplate.convertAndSend(\"agent:\" + targetAgent, message);\n    }\n    \n    @EventListener\n    public void handleMessage(AgentEvent event) {\n        // 路由到对应Agent\n    }\n}"
+        },
+        {
+          "step": 3,
+          "title": "实现工作流引擎",
+          "description": "编排Agent执行顺序和依赖关系",
+          "codeSnippet": "@Service\npublic class WorkflowEngine {\n    private final Map<String, BaseAgent> agents;\n    \n    public ProjectResult executeWorkflow(ProjectRequest request) {\n        // 1. PM生成PRD\n        Task prdTask = agents.get(\"pm\").processTask(...);\n        \n        // 2. Architect设计架构\n        Task designTask = agents.get(\"architect\").processTask(...);\n        \n        // 3. Developers并行开发\n        List<Task> devTasks = parallelExecute(...);\n        \n        // 4. Tester测试\n        Task testResult = agents.get(\"tester\").processTask(...);\n        \n        return assembleResult(prdTask, designTask, devTasks, testResult);\n    }\n}"
+        }
+      ],
+      "testingCriteria": [
+        "各Agent能够正确履行职责",
+        "消息传递可靠,无丢失",
+        "工作流能够正常完成",
+        "生成的产物质量达标"
+      ],
+      "commonIssues": [
+        {
+          "issue": "Agent陷入无限循环",
+          "solution": "设置最大迭代次数,添加终止条件"
+        },
+        {
+          "issue": "消息积压",
+          "solution": "使用异步处理,添加背压机制"
+        }
+      ],
+      "extensions": [
+        "添加Agent性能监控",
+        "实现动态Agent注册",
+        "支持工作流可视化编辑",
+        "添加人类介入节点(Human-in-the-loop)"
+      ],
+      "resources": [
+        {"type": "doc", "title": "Multi-Agent Systems论文", "url": "https://arxiv.org/abs/2308.00352"}
+      ]
+    },
+    {
+      "id": "proj-5",
+      "title": "智能客服系统",
+      "level": "L3",
+      "duration": "3周",
+      "techStack": ["Spring Boot 3", "Spring AI", "Elasticsearch", "Milvus", "MySQL", "WebSocket"],
+      "description": "构建一个企业级智能客服系统,结合RAG、意图识别、多轮对话管理,提供准确的客户服务。",
+      "learningObjectives": [
+        "掌握企业级AI应用架构",
+        "学习意图识别和槽位填充",
+        "理解对话状态管理",
+        "实践高并发场景优化"
+      ],
+      "requirements": [
+        "意图识别(咨询、投诉、售后等)",
+        "基于FAQ和产品文档的RAG问答",
+        "多轮对话状态管理",
+        "人工客服无缝转接",
+        "支持并发1000+用户",
+        "完整的日志和监控"
+      ],
+      "architecture": "graph TB\n    Client[用户] --> WS[WebSocket Gateway]\n    WS --> LB[Load Balancer]\n    LB --> Intent[Intent Classifier]\n    Intent -->|FAQ| RAG[RAG Engine]\n    Intent -->|Order| Order[Order Service]\n    Intent -->|Complaint| Ticket[Ticket System]\n    Intent -->|Complex| Human[Human Agent]\n    RAG --> KB[Knowledge Base]\n    Order --> DB[(MySQL)]\n    WS --> Session[Session Manager]\n    Session --> Redis[(Redis)]",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "title": "意图分类器",
+          "description": "使用LLM或传统NLP模型进行意图识别",
+          "codeSnippet": "@Service\npublic class IntentClassifier {\n    private final ChatClient chatClient;\n    \n    public Intent classify(String userMessage) {\n        String prompt = String.format(\"\"\"\n            Classify the following customer message into one of these intents:\n            - PRODUCT_INQUIRY: Questions about products\n            - ORDER_STATUS: Check order status\n            - RETURN_REFUND: Return or refund requests\n            - TECHNICAL_SUPPORT: Technical issues\n            - COMPLAINT: Complaints\n            - OTHER: Other issues\n            \n            Message: %s\n            Intent:\n            \"\"\", userMessage);\n        \n        String intent = chatClient.prompt(prompt).call().content();\n        return Intent.valueOf(intent.trim());\n    }\n}"
+        },
+        {
+          "step": 2,
+          "title": "对话状态管理",
+          "description": "使用Redis管理多轮对话状态",
+          "codeSnippet": "@Service\npublic class ConversationManager {\n    private final RedisTemplate<String, ConversationState> redisTemplate;\n    \n    public ConversationState getState(String sessionId) {\n        String key = \"conversation:\" + sessionId;\n        ConversationState state = redisTemplate.opsForValue().get(key);\n        return state != null ? state : new ConversationState();\n    }\n    \n    public void updateState(String sessionId, ConversationState state) {\n        redisTemplate.opsForValue().set(\n            \"conversation:\" + sessionId, \n            state, \n            30, \n            TimeUnit.MINUTES\n        );\n    }\n}"
+        },
+        {
+          "step": 3,
+          "title": "高并发优化",
+          "description": "实现缓存、限流、降级策略",
+          "codeSnippet": "@Service\npublic class CustomerServiceAgent {\n    @Cacheable(value = \"faq\", key = \"#question\")\n    public String answerFAQ(String question) {\n        // 从缓存或RAG获取答案\n    }\n    \n    @RateLimiter(name = \"customerService\", fallbackMethod = \"fallback\")\n    public Mono<String> handleRequest(String sessionId, String message) {\n        // 正常处理逻辑\n    }\n    \n    public Mono<String> fallback(String sessionId, String message, Throwable t) {\n        return Mono.just(\"抱歉,系统繁忙,请稍后重试或转人工客服\");\n    }\n}"
+        }
+      ],
+      "testingCriteria": [
+        "意图识别准确率>90%",
+        "常见问题回答准确率>95%",
+        "支持1000+并发用户",
+        "平均响应时间<2秒",
+        "人工转接成功率100%"
+      ],
+      "commonIssues": [
+        {
+          "issue": "意图识别不准确",
+          "solution": "收集bad case持续优化,使用few-shot prompting"
+        },
+        {
+          "issue": "高并发下响应慢",
+          "solution": "多层缓存(本地+Redis),异步处理,CDN加速"
+        },
+        {
+          "issue": "多轮对话上下文丢失",
+          "solution": "合理设计session过期策略,关键信息持久化"
+        }
+      ],
+      "extensions": [
+        "添加情感分析,识别愤怒客户优先转人工",
+        "实现主动营销推荐",
+        "多语言支持",
+        "语音交互集成"
+      ],
+      "resources": []
+    }
+  ]
+}

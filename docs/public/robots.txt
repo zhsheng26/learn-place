@@ -1,0 +1,12 @@
+# LearnPlace Robots.txt
+# 允许所有搜索引擎抓取
+
+User-agent: *
+Allow: /
+
+# Sitemap位置
+Sitemap: https://your-org.github.io/learn-place/sitemap.xml
+
+# 禁止抓取的目录(如有)
+# Disallow: /admin/
+# Disallow: /private/

@@ -1,0 +1,253 @@
+{
+  "phases": [
+    {
+      "id": "phase-1",
+      "title": "LLM基础认知",
+      "duration": "2周",
+      "difficulty": "L1",
+      "prerequisites": ["Java基础", "HTTP协议"],
+      "description": "理解大语言模型的基本原理和核心概念",
+      "nodes": [
+        {
+          "id": "node-1-1",
+          "title": "什么是大语言模型",
+          "type": "article",
+          "url": "/guide/llm-basics/what-is-llm",
+          "estimatedMinutes": 30,
+          "tags": ["理论基础"],
+          "resources": [
+            {"type": "doc", "title": "Transformer论文", "url": "https://arxiv.org/abs/1706.03762"},
+            {"type": "video", "title": "李宏毅机器学习课程", "url": "https://www.bilibili.com/video/BV1J94y1f7kJ"}
+          ]
+        },
+        {
+          "id": "node-1-2",
+          "title": "Transformer架构详解",
+          "type": "article",
+          "url": "/guide/llm-basics/transformer",
+          "estimatedMinutes": 60,
+          "tags": ["理论基础", "架构设计"],
+          "resources": [
+            {"type": "doc", "title": "The Illustrated Transformer", "url": "https://jalammar.github.io/illustrated-transformer/"},
+            {"type": "video", "title": "Transformer动画讲解", "url": "https://www.youtube.com/watch?v=wjZofJX0v4M"}
+          ]
+        },
+        {
+          "id": "node-1-3",
+          "title": "Token与Embedding",
+          "type": "article",
+          "url": "/guide/llm-basics/token-embedding",
+          "estimatedMinutes": 45,
+          "tags": ["理论基础"],
+          "resources": [
+            {"type": "doc", "title": "OpenAI Tokenizer", "url": "https://platform.openai.com/tokenizer"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "title": "Prompt工程",
+      "duration": "1周",
+      "difficulty": "L1",
+      "prerequisites": ["LLM基础认知"],
+      "description": "掌握与大语言模型高效交互的技巧",
+      "nodes": [
+        {
+          "id": "node-2-1",
+          "title": "Prompt设计原则",
+          "type": "article",
+          "url": "/guide/prompt-eng/principles",
+          "estimatedMinutes": 40,
+          "tags": ["实践技巧"],
+          "resources": [
+            {"type": "doc", "title": "OpenAI Prompt Engineering Guide", "url": "https://platform.openai.com/docs/guides/prompt-engineering"}
+          ]
+        },
+        {
+          "id": "node-2-2",
+          "title": "常用技巧(CoT/Few-shot)",
+          "type": "article",
+          "url": "/guide/prompt-eng/techniques",
+          "estimatedMinutes": 50,
+          "tags": ["实践技巧", "高级技巧"],
+          "resources": [
+            {"type": "doc", "title": "Chain-of-Thought Prompting", "url": "https://arxiv.org/abs/2201.11903"}
+          ]
+        },
+        {
+          "id": "node-2-3",
+          "title": "Prompt优化实践",
+          "type": "practice",
+          "url": "/guide/prompt-eng/optimization",
+          "estimatedMinutes": 90,
+          "tags": ["实战练习"],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "title": "Spring AI框架",
+      "duration": "2周",
+      "difficulty": "L2",
+      "prerequisites": ["Spring Boot基础", "Prompt工程"],
+      "description": "学习使用Spring AI框架构建AI应用",
+      "nodes": [
+        {
+          "id": "node-3-1",
+          "title": "Spring AI快速入门",
+          "type": "tutorial",
+          "url": "/guide/spring-ai/quickstart",
+          "estimatedMinutes": 60,
+          "tags": ["框架学习"],
+          "resources": [
+            {"type": "doc", "title": "Spring AI官方文档", "url": "https://spring.io/projects/spring-ai"}
+          ]
+        },
+        {
+          "id": "node-3-2",
+          "title": "ChatClient使用",
+          "type": "tutorial",
+          "url": "/guide/spring-ai/chat-client",
+          "estimatedMinutes": 45,
+          "tags": ["框架学习"],
+          "resources": []
+        },
+        {
+          "id": "node-3-3",
+          "title": "Function Calling",
+          "type": "tutorial",
+          "url": "/guide/spring-ai/function-calling",
+          "estimatedMinutes": 60,
+          "tags": ["框架学习", "高级特性"],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "title": "RAG全链路",
+      "duration": "3周",
+      "difficulty": "L2",
+      "prerequisites": ["Spring AI框架", "向量数据库基础"],
+      "description": "掌握检索增强生成技术的完整实现",
+      "nodes": [
+        {
+          "id": "node-4-1",
+          "title": "RAG架构原理",
+          "type": "article",
+          "url": "/guide/rag/architecture",
+          "estimatedMinutes": 50,
+          "tags": ["理论基础", "架构设计"],
+          "resources": [
+            {"type": "doc", "title": "RAG论文", "url": "https://arxiv.org/abs/2005.11401"}
+          ]
+        },
+        {
+          "id": "node-4-2",
+          "title": "向量数据库选型",
+          "type": "article",
+          "url": "/guide/rag/vector-db",
+          "estimatedMinutes": 40,
+          "tags": ["技术选型"],
+          "resources": []
+        },
+        {
+          "id": "node-4-3",
+          "title": "文本分块策略",
+          "type": "tutorial",
+          "url": "/guide/rag/chunking",
+          "estimatedMinutes": 60,
+          "tags": ["实践技巧"],
+          "resources": []
+        },
+        {
+          "id": "node-4-4",
+          "title": "检索优化技巧",
+          "type": "tutorial",
+          "url": "/guide/rag/retrieval",
+          "estimatedMinutes": 75,
+          "tags": ["性能优化"],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "phase-5",
+      "title": "Agent开发",
+      "duration": "3周",
+      "difficulty": "L3",
+      "prerequisites": ["RAG全链路", "设计模式"],
+      "description": "构建智能Agent系统",
+      "nodes": [
+        {
+          "id": "node-5-1",
+          "title": "Agent设计模式",
+          "type": "article",
+          "url": "/guide/agent/design-patterns",
+          "estimatedMinutes": 60,
+          "tags": ["架构设计"],
+          "resources": []
+        },
+        {
+          "id": "node-5-2",
+          "title": "ReAct框架",
+          "type": "tutorial",
+          "url": "/guide/agent/react",
+          "estimatedMinutes": 90,
+          "tags": ["框架学习"],
+          "resources": [
+            {"type": "doc", "title": "ReAct论文", "url": "https://arxiv.org/abs/2210.03629"}
+          ]
+        },
+        {
+          "id": "node-5-3",
+          "title": "多Agent协作",
+          "type": "tutorial",
+          "url": "/guide/agent/multi-agent",
+          "estimatedMinutes": 120,
+          "tags": ["高级特性", "系统设计"],
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "phase-6",
+      "title": "部署运维",
+      "duration": "1周",
+      "difficulty": "L2",
+      "prerequisites": ["Agent开发", "Docker基础"],
+      "description": "AI应用的部署、监控和优化",
+      "nodes": [
+        {
+          "id": "node-6-1",
+          "title": "模型部署方案",
+          "type": "article",
+          "url": "/guide/deployment/model-deploy",
+          "estimatedMinutes": 45,
+          "tags": ["部署运维"],
+          "resources": []
+        },
+        {
+          "id": "node-6-2",
+          "title": "性能优化",
+          "type": "tutorial",
+          "url": "/guide/deployment/performance",
+          "estimatedMinutes": 60,
+          "tags": ["性能优化"],
+          "resources": []
+        },
+        {
+          "id": "node-6-3",
+          "title": "监控与日志",
+          "type": "tutorial",
+          "url": "/guide/deployment/monitoring",
+          "estimatedMinutes": 50,
+          "tags": ["运维监控"],
+          "resources": []
+        }
+      ]
+    }
+  ]
+}
